@@ -1,43 +1,1050 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <!---------scripts----------->
+  <script>
+    if (navigator.userAgent.match(/MSIE|Internet Explorer/i) || navigator.userAgent.match(/Trident\/7\..*?rv:11/i)) {
+      var href = document.location.href;
+      if (!href.match(/[?&]nowprocket/)) {
+        if (href.indexOf("?") == -1) {
+          if (href.indexOf("#") == -1) {
+            document.location.href = href + "?nowprocket=1"
+          } else {
+            document.location.href = href.replace("#", "?nowprocket=1#")
+          }
+        } else {
+          if (href.indexOf("#") == -1) {
+            document.location.href = href + "&nowprocket=1"
+          } else {
+            document.location.href = href.replace("#", "&nowprocket=1#")
+          }
+        }
+      }
+    }
+  </script>
+  <script>
+    class RocketLazyLoadScripts {
+      constructor() {
+        this.triggerEvents = ["keydown", "mousedown", "mousemove", "touchmove", "touchstart", "touchend", "wheel"], this.userEventHandler = this._triggerListener.bind(this), this.touchStartHandler = this._onTouchStart.bind(this), this.touchMoveHandler = this._onTouchMove.bind(this), this.touchEndHandler = this._onTouchEnd.bind(this), this.clickHandler = this._onClick.bind(this), this.interceptedClicks = [], window.addEventListener("pageshow", e => {
+          this.persisted = e.persisted
+        }), window.addEventListener("DOMContentLoaded", () => {
+          this._preconnect3rdParties()
+        }), this.delayedScripts = {
+          normal: [],
+          async: [],
+          defer: []
+        }, this.trash = [], this.allJQueries = []
+      }
+      _addUserInteractionListener(e) {
+        if (document.hidden) {
+          e._triggerListener();
+          return
+        }
+        this.triggerEvents.forEach(t => window.addEventListener(t, e.userEventHandler, {
+          passive: !0
+        })), window.addEventListener("touchstart", e.touchStartHandler, {
+          passive: !0
+        }), window.addEventListener("mousedown", e.touchStartHandler), document.addEventListener("visibilitychange", e.userEventHandler)
+      }
+      _removeUserInteractionListener() {
+        this.triggerEvents.forEach(e => window.removeEventListener(e, this.userEventHandler, {
+          passive: !0
+        })), document.removeEventListener("visibilitychange", this.userEventHandler)
+      }
+      _onTouchStart(e) {
+        "HTML" !== e.target.tagName && (window.addEventListener("touchend", this.touchEndHandler), window.addEventListener("mouseup", this.touchEndHandler), window.addEventListener("touchmove", this.touchMoveHandler, {
+          passive: !0
+        }), window.addEventListener("mousemove", this.touchMoveHandler), e.target.addEventListener("click", this.clickHandler), this._renameDOMAttribute(e.target, "onclick", "rocket-onclick"), this._pendingClickStarted())
+      }
+      _onTouchMove(e) {
+        window.removeEventListener("touchend", this.touchEndHandler), window.removeEventListener("mouseup", this.touchEndHandler), window.removeEventListener("touchmove", this.touchMoveHandler, {
+          passive: !0
+        }), window.removeEventListener("mousemove", this.touchMoveHandler), e.target.removeEventListener("click", this.clickHandler), this._renameDOMAttribute(e.target, "rocket-onclick", "onclick"), this._pendingClickFinished()
+      }
+      _onTouchEnd(e) {
+        window.removeEventListener("touchend", this.touchEndHandler), window.removeEventListener("mouseup", this.touchEndHandler), window.removeEventListener("touchmove", this.touchMoveHandler, {
+          passive: !0
+        }), window.removeEventListener("mousemove", this.touchMoveHandler)
+      }
+      _onClick(e) {
+        e.target.removeEventListener("click", this.clickHandler), this._renameDOMAttribute(e.target, "rocket-onclick", "onclick"), this.interceptedClicks.push(e), e.preventDefault(), e.stopPropagation(), e.stopImmediatePropagation(), this._pendingClickFinished()
+      }
+      _replayClicks() {
+        window.removeEventListener("touchstart", this.touchStartHandler, {
+          passive: !0
+        }), window.removeEventListener("mousedown", this.touchStartHandler), this.interceptedClicks.forEach(e => {
+          e.target.dispatchEvent(new MouseEvent("click", {
+            view: e.view,
+            bubbles: !0,
+            cancelable: !0
+          }))
+        })
+      }
+      _waitForPendingClicks() {
+        return new Promise(e => {
+          this._isClickPending ? this._pendingClickFinished = e : e()
+        })
+      }
+      _pendingClickStarted() {
+        this._isClickPending = !0
+      }
+      _pendingClickFinished() {
+        this._isClickPending = !1
+      }
+      _renameDOMAttribute(e, t, i) {
+        e.hasAttribute && e.hasAttribute(t) && (event.target.setAttribute(i, event.target.getAttribute(t)), event.target.removeAttribute(t))
+      }
+      _triggerListener() {
+        this._removeUserInteractionListener(this), "loading" === document.readyState ? document.addEventListener("DOMContentLoaded", this._loadEverythingNow.bind(this)) : this._loadEverythingNow()
+      }
+      _preconnect3rdParties() {
+        let e = [];
+        document.querySelectorAll("script[type=rocketlazyloadscript]").forEach(t => {
+          if (t.hasAttribute("src")) {
+            let i = new URL(t.src).origin;
+            i !== location.origin && e.push({
+              src: i,
+              crossOrigin: t.crossOrigin || "module" === t.getAttribute("data-rocket-type")
+            })
+          }
+        }), e = [...new Map(e.map(e => [JSON.stringify(e), e])).values()], this._batchInjectResourceHints(e, "preconnect")
+      }
+      async _loadEverythingNow() {
+        this.lastBreath = Date.now(), this._delayEventListeners(this), this._delayJQueryReady(this), this._handleDocumentWrite(), this._registerAllDelayedScripts(), this._preloadAllScripts(), await this._loadScriptsFromList(this.delayedScripts.normal), await this._loadScriptsFromList(this.delayedScripts.defer), await this._loadScriptsFromList(this.delayedScripts.async);
+        try {
+          await this._triggerDOMContentLoaded(), await this._triggerWindowLoad()
+        } catch (e) {
+          console.error(e)
+        }
+        window.dispatchEvent(new Event("rocket-allScriptsLoaded")), this._waitForPendingClicks().then(() => {
+          this._replayClicks()
+        }), this._emptyTrash()
+      }
+      _registerAllDelayedScripts() {
+        document.querySelectorAll("script[type=rocketlazyloadscript]").forEach(e => {
+          e.hasAttribute("data-rocket-src") ? e.hasAttribute("async") && !1 !== e.async ? this.delayedScripts.async.push(e) : e.hasAttribute("defer") && !1 !== e.defer || "module" === e.getAttribute("data-rocket-type") ? this.delayedScripts.defer.push(e) : this.delayedScripts.normal.push(e) : this.delayedScripts.normal.push(e)
+        })
+      }
+      async _transformScript(e) {
+        return await this._littleBreath(), new Promise(t => {
+          function i() {
+            e.setAttribute("data-rocket-status", "executed"), t()
+          }
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+          function r() {
+            e.setAttribute("data-rocket-status", "failed"), t()
+          }
+          try {
+            let n = e.getAttribute("data-rocket-type"),
+              s = e.getAttribute("data-rocket-src");
+            if (n ? (e.type = n, e.removeAttribute("data-rocket-type")) : e.removeAttribute("type"), e.addEventListener("load", i), e.addEventListener("error", r), s) e.src = s, e.removeAttribute("data-rocket-src");
+            else if (navigator.userAgent.indexOf("Firefox/") > 0) {
+              var a = document.createElement("script");
+              [...e.attributes].forEach(e => {
+                "type" !== e.nodeName && a.setAttribute("data-rocket-type" === e.nodeName ? "type" : e.nodeName, e.nodeValue)
+              }), a.text = e.text, e.parentNode.replaceChild(a, e), i()
+            } else e.src = "data:text/javascript;base64," + btoa(e.text)
+          } catch (o) {
+            r()
+          }
+        })
+      }
+      async _loadScriptsFromList(e) {
+        let t = e.shift();
+        return t ? (await this._transformScript(t), this._loadScriptsFromList(e)) : Promise.resolve()
+      }
+      _preloadAllScripts() {
+        this._batchInjectResourceHints([...this.delayedScripts.normal, ...this.delayedScripts.defer, ...this.delayedScripts.async], "preload")
+      }
+      _batchInjectResourceHints(e, t) {
+        var i = document.createDocumentFragment();
+        e.forEach(e => {
+          let r = e.getAttribute && e.getAttribute("data-rocket-src") || e.src;
+          if (r) {
+            let n = document.createElement("link");
+            n.href = r, n.rel = t, "preconnect" !== t && (n.as = "script"), e.getAttribute && "module" === e.getAttribute("data-rocket-type") && (n.crossOrigin = !0), e.crossOrigin && (n.crossOrigin = e.crossOrigin), e.integrity && (n.integrity = e.integrity), i.appendChild(n), this.trash.push(n)
+          }
+        }), document.head.appendChild(i)
+      }
+      _delayEventListeners(e) {
+        let t = {};
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+        function i(e, i) {
+          ! function e(i) {
+            !t[i] && (t[i] = {
+              originalFunctions: {
+                add: i.addEventListener,
+                remove: i.removeEventListener
+              },
+              eventsToRewrite: []
+            }, i.addEventListener = function () {
+              arguments[0] = r(arguments[0]), t[i].originalFunctions.add.apply(i, arguments)
+            }, i.removeEventListener = function () {
+              arguments[0] = r(arguments[0]), t[i].originalFunctions.remove.apply(i, arguments)
+            });
+
+            function r(e) {
+              return t[i].eventsToRewrite.indexOf(e) >= 0 ? "rocket-" + e : e
+            }
+          }(e), t[e].eventsToRewrite.push(i)
+        }
+
+        function r(e, t) {
+          let i = e[t];
+          Object.defineProperty(e, t, {
+            get: () => i || function () { },
+            set(r) {
+              e["rocket" + t] = i = r
+            }
+          })
+        }
+        i(document, "DOMContentLoaded"), i(window, "DOMContentLoaded"), i(window, "load"), i(window, "pageshow"), i(document, "readystatechange"), r(document, "onreadystatechange"), r(window, "onload"), r(window, "onpageshow"), Object.defineProperty(document, "readyState", {
+          get: () => e.rocketReadyState,
+          set(t) {
+            e.rocketReadyState = t
+          }
+        }), document.readyState = "loading"
+      }
+      _delayJQueryReady(e) {
+        let t;
+
+        function i(i) {
+          if (i && i.fn && !e.allJQueries.includes(i)) {
+            i.fn.ready = i.fn.init.prototype.ready = function (t) {
+              return e.domReadyFired ? t.bind(document)(i) : document.addEventListener("rocket-DOMContentLoaded", () => t.bind(document)(i)), i([])
+            };
+            let r = i.fn.on;
+            i.fn.on = i.fn.init.prototype.on = function () {
+              if (this[0] === window) {
+                function e(e) {
+                  return e.split(" ").map(e => "load" === e || 0 === e.indexOf("load.") ? "rocket-jquery-load" : e).join(" ")
+                }
+                "string" == typeof arguments[0] || arguments[0] instanceof String ? arguments[0] = e(arguments[0]) : "object" == typeof arguments[0] && Object.keys(arguments[0]).forEach(t => {
+                  delete Object.assign(arguments[0], {
+                    [e(t)]: arguments[0][t]
+                  })[t]
+                })
+              }
+              return r.apply(this, arguments), this
+            }, e.allJQueries.push(i)
+          }
+          t = i
+        }
+        i(window.jQuery), Object.defineProperty(window, "jQuery", {
+          get: () => t,
+          set(e) {
+            i(e)
+          }
+        })
+      }
+      async _triggerDOMContentLoaded() {
+        this.domReadyFired = !0, document.readyState = "interactive", await this._littleBreath(), document.dispatchEvent(new Event("rocket-DOMContentLoaded")), await this._littleBreath(), window.dispatchEvent(new Event("rocket-DOMContentLoaded")), await this._littleBreath(), document.dispatchEvent(new Event("rocket-readystatechange")), await this._littleBreath(), document.rocketonreadystatechange && document.rocketonreadystatechange()
+      }
+      async _triggerWindowLoad() {
+        document.readyState = "complete", await this._littleBreath(), window.dispatchEvent(new Event("rocket-load")), await this._littleBreath(), window.rocketonload && window.rocketonload(), await this._littleBreath(), this.allJQueries.forEach(e => e(window).trigger("rocket-jquery-load")), await this._littleBreath();
+        let e = new Event("rocket-pageshow");
+        e.persisted = this.persisted, window.dispatchEvent(e), await this._littleBreath(), window.rocketonpageshow && window.rocketonpageshow({
+          persisted: this.persisted
+        })
+      }
+      _handleDocumentWrite() {
+        let e = new Map;
+        document.write = document.writeln = function (t) {
+          let i = document.currentScript;
+          i || console.error("WPRocket unable to document.write this: " + t);
+          let r = document.createRange(),
+            n = i.parentElement,
+            s = e.get(i);
+          void 0 === s && (s = i.nextSibling, e.set(i, s));
+          let a = document.createDocumentFragment();
+          r.setStart(a, 0), a.appendChild(r.createContextualFragment(t)), n.insertBefore(a, s)
+        }
+      }
+      async _littleBreath() {
+        Date.now() - this.lastBreath > 45 && (await this._requestAnimFrame(), this.lastBreath = Date.now())
+      }
+      async _requestAnimFrame() {
+        return document.hidden ? new Promise(e => setTimeout(e)) : new Promise(e => requestAnimationFrame(e))
+      }
+      _emptyTrash() {
+        this.trash.forEach(e => e.remove())
+      }
+      static run() {
+        let e = new RocketLazyLoadScripts;
+        e._addUserInteractionListener(e)
+      }
+    }
+    RocketLazyLoadScripts.run();
+  </script>
+  <script type="text/javascript" id="addtoany-core-js-before">
+    /* <![CDATA[ */
+    window.a2a_config = window.a2a_config || {};
+    a2a_config.callbacks = [];
+    a2a_config.overlays = [];
+    a2a_config.templates = {};
+    a2a_config.icon_color = "#ffffff,#004f92";
+    /* ]]> */
+  </script>
+  <script id="wpcp_css_disable_selection" type="text/javascript">
+    var e = document.getElementsByTagName('body')[0];
+    if (e) {
+        e.setAttribute('unselectable', "on");
+    }
+</script>
+<script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/contact-form-7/includes/swv/js/index.js?ver=1696887965" id="swv-js" defer></script>
+<script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/contact-form-7/includes/js/index.js?ver=1696887966" id="contact-form-7-js" defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript"
+    data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-includes/js/jquery/jquery-migrate.min.js?ver=1696887965"
+    id="jquery-migrate-js" defer></script>
+  <script data-minify="1" type="text/javascript" async
+    src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/add-to-any/addtoany.min.js?ver=1696887965"
+    id="addtoany-jquery-js"></script>
+  <script type="text/javascript" async src="https://static.addtoany.com/menu/page.js" id="addtoany-core-js"></script>
+  <script type="text/javascript"
+    src="https://op2cf1.p3cdn1.secureserver.net/wp-includes/js/jquery/jquery.min.js?ver=3.7.1&amp;time=1725133019"
+    id="jquery-core-js" defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript"
+    data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/contact-form-7/includes/swv/js/index.js?ver=1696887965"
+    id="swv-js" defer></script>
+
+    <!-- -------whole------- -->
+    <script type="text/javascript" id="rocket-browser-checker-js-after">
+      /* <![CDATA[ */
+      "use strict";
+      var _createClass = function() {
+          function defineProperties(target, props) {
+              for (var i = 0; i < props.length; i++) {
+                  var descriptor = props[i];
+                  descriptor.enumerable = descriptor.enumerable || !1, descriptor.configurable = !0, "value" in descriptor && (descriptor.writable = !0), Object.defineProperty(target, descriptor.key, descriptor)
+              }
+          }
+          return function(Constructor, protoProps, staticProps) {
+              return protoProps && defineProperties(Constructor.prototype, protoProps), staticProps && defineProperties(Constructor, staticProps), Constructor
+          }
+      }();
+
+      function _classCallCheck(instance, Constructor) {
+          if (!(instance instanceof Constructor)) throw new TypeError("Cannot call a class as a function")
+      }
+      var RocketBrowserCompatibilityChecker = function() {
+          function RocketBrowserCompatibilityChecker(options) {
+              _classCallCheck(this, RocketBrowserCompatibilityChecker), this.passiveSupported = !1, this._checkPassiveOption(this), this.options = !!this.passiveSupported && options
+          }
+          return _createClass(RocketBrowserCompatibilityChecker, [{
+              key: "_checkPassiveOption",
+              value: function(self) {
+                  try {
+                      var options = {
+                          get passive() {
+                              return !(self.passiveSupported = !0)
+                          }
+                      };
+                      window.addEventListener("test", null, options), window.removeEventListener("test", null, options)
+                  } catch (err) {
+                      self.passiveSupported = !1
+                  }
+              }
+          }, {
+              key: "initRequestIdleCallback",
+              value: function() {
+                  !1 in window && (window.requestIdleCallback = function(cb) {
+                      var start = Date.now();
+                      return setTimeout(function() {
+                          cb({
+                              didTimeout: !1,
+                              timeRemaining: function() {
+                                  return Math.max(0, 50 - (Date.now() - start))
+                              }
+                          })
+                      }, 1)
+                  }), !1 in window && (window.cancelIdleCallback = function(id) {
+                      return clearTimeout(id)
+                  })
+              }
+          }, {
+              key: "isDataSaverModeOn",
+              value: function() {
+                  return "connection" in navigator && !0 === navigator.connection.saveData
+              }
+          }, {
+              key: "supportsLinkPrefetch",
+              value: function() {
+                  var elem = document.createElement("link");
+                  return elem.relList && elem.relList.supports && elem.relList.supports("prefetch") && window.IntersectionObserver && "isIntersecting" in IntersectionObserverEntry.prototype
+              }
+          }, {
+              key: "isSlowConnection",
+              value: function() {
+                  return "connection" in navigator && "effectiveType" in navigator.connection && ("2g" === navigator.connection.effectiveType || "slow-2g" === navigator.connection.effectiveType)
+              }
+          }]), RocketBrowserCompatibilityChecker
+      }();
+      /* ]]> */
+  </script>
+  <script type="text/javascript" id="rocket-preload-links-js-extra">
+      /* <![CDATA[ */
+      var RocketPreloadLinksConfig = {
+          "excludeUris": "\/(?:.+\/)?feed(?:\/(?:.+\/?)?)?$|\/(?:.+\/)?embed\/|\/(index\\.php\/)?(.*)wp\\-json(\/.*|$)|\/refer\/|\/go\/|\/recommend\/|\/recommends\/",
+          "usesTrailingSlash": "1",
+          "imageExt": "jpg|jpeg|gif|png|tiff|bmp|webp|avif|pdf|doc|docx|xls|xlsx|php",
+          "fileExt": "jpg|jpeg|gif|png|tiff|bmp|webp|avif|pdf|doc|docx|xls|xlsx|php|html|htm",
+          "siteUrl": "https:\/\/medicalmetrics.com",
+          "onHoverDelay": "100",
+          "rateThrottle": "3"
+      };
+      /* ]]> */
+  </script>
+  <script type="text/javascript" id="rocket-preload-links-js-after">
+      /* <![CDATA[ */
+      (function() {
+          "use strict";
+          var r = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(e) {
+                  return typeof e
+              } : function(e) {
+                  return e && "function" == typeof Symbol && e.constructor === Symbol && e !== Symbol.prototype ? "symbol" : typeof e
+              },
+              e = function() {
+                  function i(e, t) {
+                      for (var n = 0; n < t.length; n++) {
+                          var i = t[n];
+                          i.enumerable = i.enumerable || !1, i.configurable = !0, "value" in i && (i.writable = !0), Object.defineProperty(e, i.key, i)
+                      }
+                  }
+                  return function(e, t, n) {
+                      return t && i(e.prototype, t), n && i(e, n), e
+                  }
+              }();
+
+          function i(e, t) {
+              if (!(e instanceof t)) throw new TypeError("Cannot call a class as a function")
+          }
+          var t = function() {
+              function n(e, t) {
+                  i(this, n), this.browser = e, this.config = t, this.options = this.browser.options, this.prefetched = new Set, this.eventTime = null, this.threshold = 1111, this.numOnHover = 0
+              }
+              return e(n, [{
+                  key: "init",
+                  value: function() {
+                      !this.browser.supportsLinkPrefetch() || this.browser.isDataSaverModeOn() || this.browser.isSlowConnection() || (this.regex = {
+                          excludeUris: RegExp(this.config.excludeUris, "i"),
+                          images: RegExp(".(" + this.config.imageExt + ")$", "i"),
+                          fileExt: RegExp(".(" + this.config.fileExt + ")$", "i")
+                      }, this._initListeners(this))
+                  }
+              }, {
+                  key: "_initListeners",
+                  value: function(e) {
+                      -1 < this.config.onHoverDelay && document.addEventListener("mouseover", e.listener.bind(e), e.listenerOptions), document.addEventListener("mousedown", e.listener.bind(e), e.listenerOptions), document.addEventListener("touchstart", e.listener.bind(e), e.listenerOptions)
+                  }
+              }, {
+                  key: "listener",
+                  value: function(e) {
+                      var t = e.target.closest("a"),
+                          n = this._prepareUrl(t);
+                      if (null !== n) switch (e.type) {
+                          case "mousedown":
+                          case "touchstart":
+                              this._addPrefetchLink(n);
+                              break;
+                          case "mouseover":
+                              this._earlyPrefetch(t, n, "mouseout")
+                      }
+                  }
+              }, {
+                  key: "_earlyPrefetch",
+                  value: function(t, e, n) {
+                      var i = this,
+                          r = setTimeout(function() {
+                              if (r = null, 0 === i.numOnHover) setTimeout(function() {
+                                  return i.numOnHover = 0
+                              }, 1e3);
+                              else if (i.numOnHover > i.config.rateThrottle) return;
+                              i.numOnHover++, i._addPrefetchLink(e)
+                          }, this.config.onHoverDelay);
+                      t.addEventListener(n, function e() {
+                          t.removeEventListener(n, e, {
+                              passive: !0
+                          }), null !== r && (clearTimeout(r), r = null)
+                      }, {
+                          passive: !0
+                      })
+                  }
+              }, {
+                  key: "_addPrefetchLink",
+                  value: function(i) {
+                      return this.prefetched.add(i.href), new Promise(function(e, t) {
+                          var n = document.createElement("link");
+                          n.rel = "prefetch", n.href = i.href, n.onload = e, n.onerror = t, document.head.appendChild(n)
+                      }).catch(function() {})
+                  }
+              }, {
+                  key: "_prepareUrl",
+                  value: function(e) {
+                      if (null === e || "object" !== (void 0 === e ? "undefined" : r(e)) || !1 in e || -1 === ["http:", "https:"].indexOf(e.protocol)) return null;
+                      var t = e.href.substring(0, this.config.siteUrl.length),
+                          n = this._getPathname(e.href, t),
+                          i = {
+                              original: e.href,
+                              protocol: e.protocol,
+                              origin: t,
+                              pathname: n,
+                              href: t + n
+                          };
+                      return this._isLinkOk(i) ? i : null
+                  }
+              }, {
+                  key: "_getPathname",
+                  value: function(e, t) {
+                      var n = t ? e.substring(this.config.siteUrl.length) : e;
+                      return n.startsWith("/") || (n = "/" + n), this._shouldAddTrailingSlash(n) ? n + "/" : n
+                  }
+              }, {
+                  key: "_shouldAddTrailingSlash",
+                  value: function(e) {
+                      return this.config.usesTrailingSlash && !e.endsWith("/") && !this.regex.fileExt.test(e)
+                  }
+              }, {
+                  key: "_isLinkOk",
+                  value: function(e) {
+                      return null !== e && "object" === (void 0 === e ? "undefined" : r(e)) && (!this.prefetched.has(e.href) && e.origin === this.config.siteUrl && -1 === e.href.indexOf("?") && -1 === e.href.indexOf("#") && !this.regex.excludeUris.test(e.href) && !this.regex.images.test(e.href))
+                  }
+              }], [{
+                  key: "run",
+                  value: function() {
+                      "undefined" != typeof RocketPreloadLinksConfig && new n(new RocketBrowserCompatibilityChecker({
+                          capture: !0,
+                          passive: !0
+                      }), RocketPreloadLinksConfig).init()
+                  }
+              }]), n
+          }();
+          t.run();
+      }());
+      /* ]]> */
+  </script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-includes/js/comment-reply.min.js?ver=1696887966" id="comment-reply-js" async="async" data-wp-strategy="async"></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/assets/js/navigation.min.js?ver=1696887966" id="medical-metrics-navigation-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/assets/js/lib/skip-link-focus-fix.js?ver=1696887966" id="medical-metrics-skip-link-focus-fix-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/assets/js/lib/fitvids.js?ver=1696887966" id="fitvids-js" defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/assets/js/lib/isotope.js?ver=1696887966" id="isotope-js" defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/assets/js/script.min.js?ver=1696887966" id="medical-metrics-script-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/assets/js/lib/minibar.js?ver=1696887966" id="simplabar-js" defer></script>
+  <script type="rocketlazyloadscript" data-rocket-type="text/javascript" data-rocket-src="https://www.google.com/recaptcha/api.js?render=6Lfn4bojAAAAAA89XquluG3-2AP056fngkXQkUO3&amp;ver=3.0" id="google-recaptcha-js"></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-includes/js/dist/vendor/wp-polyfill.min.js?ver=1696887967" id="wp-polyfill-js"></script>
+  <script type="text/javascript" id="wpcf7-recaptcha-js-extra">
+      /* <![CDATA[ */
+      var wpcf7_recaptcha = {
+          "sitekey": "6Lfn4bojAAAAAA89XquluG3-2AP056fngkXQkUO3",
+          "actions": {
+              "homepage": "homepage",
+              "contactform": "contactform"
+          }
+      };
+      /* ]]> */
+  </script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/contact-form-7/modules/recaptcha/index.js?ver=1696887967" id="wpcf7-recaptcha-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/lib/jquery-numerator/jquery-numerator.min.js?ver=1696887967"
+      id="jquery-numerator-js" defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/widgets/honeycombs/assets/js/honeycombs.min.js?ver=1696887967"
+      id="honeycombs-js-js" defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/lib/swiper/swiper.min.js?ver=1696887967" id="swiper-js" defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/js/webpack.runtime.min.js?ver=1696887967" id="elementor-webpack-runtime-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/js/frontend-modules.min.js?ver=1696887967" id="elementor-frontend-modules-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/lib/waypoints/waypoints.min.js?ver=1696887967" id="elementor-waypoints-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-includes/js/jquery/ui/core.min.js?ver=1696887968" id="jquery-ui-core-js" defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/lib/share-link/share-link.min.js?ver=1696887968" id="share-link-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/lib/dialog/dialog.min.js?ver=1696887968" id="elementor-dialog-js"
+      defer></script>
+  <script type="text/javascript" id="elementor-frontend-js-before">
+      /* <![CDATA[ */
+      var elementorFrontendConfig = {
+          "environmentMode": {
+              "edit": false,
+              "wpPreview": false,
+              "isScriptDebug": false
+          },
+          "i18n": {
+              "shareOnFacebook": "Share on Facebook",
+              "shareOnTwitter": "Share on Twitter",
+              "pinIt": "Pin it",
+              "download": "Download",
+              "downloadImage": "Download image",
+              "fullscreen": "Fullscreen",
+              "zoom": "Zoom",
+              "share": "Share",
+              "playVideo": "Play Video",
+              "previous": "Previous",
+              "next": "Next",
+              "close": "Close",
+              "a11yCarouselWrapperAriaLabel": "Carousel | Horizontal scrolling: Arrow Left & Right",
+              "a11yCarouselPrevSlideMessage": "Previous slide",
+              "a11yCarouselNextSlideMessage": "Next slide",
+              "a11yCarouselFirstSlideMessage": "This is the first slide",
+              "a11yCarouselLastSlideMessage": "This is the last slide",
+              "a11yCarouselPaginationBulletMessage": "Go to slide"
+          },
+          "is_rtl": false,
+          "breakpoints": {
+              "xs": 0,
+              "sm": 480,
+              "md": 768,
+              "lg": 1025,
+              "xl": 1440,
+              "xxl": 1600
+          },
+          "responsive": {
+              "breakpoints": {
+                  "mobile": {
+                      "label": "Mobile Portrait",
+                      "value": 767,
+                      "default_value": 767,
+                      "direction": "max",
+                      "is_enabled": true
+                  },
+                  "mobile_extra": {
+                      "label": "Mobile Landscape",
+                      "value": 880,
+                      "default_value": 880,
+                      "direction": "max",
+                      "is_enabled": true
+                  },
+                  "tablet": {
+                      "label": "Tablet Portrait",
+                      "value": 1024,
+                      "default_value": 1024,
+                      "direction": "max",
+                      "is_enabled": true
+                  },
+                  "tablet_extra": {
+                      "label": "Tablet Landscape",
+                      "value": 1200,
+                      "default_value": 1200,
+                      "direction": "max",
+                      "is_enabled": false
+                  },
+                  "laptop": {
+                      "label": "Laptop",
+                      "value": 1366,
+                      "default_value": 1366,
+                      "direction": "max",
+                      "is_enabled": false
+                  },
+                  "widescreen": {
+                      "label": "Widescreen",
+                      "value": 2400,
+                      "default_value": 2400,
+                      "direction": "min",
+                      "is_enabled": false
+                  }
+              }
+          },
+          "version": "3.15.3",
+          "is_static": false,
+          "experimentalFeatures": {
+              "e_dom_optimization": true,
+              "e_optimized_css_loading": true,
+              "additional_custom_breakpoints": true,
+              "theme_builder_v2": true,
+              "landing-pages": true,
+              "page-transitions": true,
+              "notes": true,
+              "loop": true,
+              "form-submissions": true,
+              "e_scroll_snap": true
+          },
+          "urls": {
+              "assets": "https:\/\/medicalmetrics.com\/wp-content\/plugins\/elementor\/assets\/"
+          },
+          "swiperClass": "swiper-container",
+          "settings": {
+              "page": [],
+              "editorPreferences": []
+          },
+          "kit": {
+              "active_breakpoints": ["viewport_mobile", "viewport_mobile_extra", "viewport_tablet"],
+              "body_background_background": "classic",
+              "global_image_lightbox": "yes",
+              "lightbox_enable_counter": "yes",
+              "lightbox_enable_fullscreen": "yes",
+              "lightbox_enable_zoom": "yes",
+              "lightbox_enable_share": "yes",
+              "lightbox_title_src": "title",
+              "lightbox_description_src": "description"
+          },
+          "post": {
+              "id": 7,
+              "title": "Medical%20Metrics%3A%20Imaging%20CRO%20for%20Global%20Clinical%20Trials",
+              "excerpt": "",
+              "featuredImage": false
+          }
+      };
+      /* ]]> */
+  </script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/js/frontend.min.js?ver=1696887968" id="elementor-frontend-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/widgets/simple-slider/assets/js/simple-slider.min.js?ver=1696887968"
+      id="simple-slider-js-js" defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor-pro/assets/js/webpack-pro.runtime.min.js?ver=1696887968" id="elementor-pro-webpack-runtime-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-includes/js/dist/hooks.min.js?ver=1696887968" id="wp-hooks-js"></script>
+  <script type="rocketlazyloadscript" data-rocket-type="text/javascript" data-rocket-src="https://op2cf1.p3cdn1.secureserver.net/wp-includes/js/dist/i18n.min.js?ver=5e580eb46a90c2b997e6&amp;time=1725133019" id="wp-i18n-js"></script>
+  <script type="text/javascript" id="wp-i18n-js-after">
+      /* <![CDATA[ */
+      wp.i18n.setLocaleData({
+          'text direction\u0004ltr': ['ltr']
+      });
+      /* ]]> */
+  </script>
+  <script type="text/javascript" id="elementor-pro-frontend-js-before">
+      /* <![CDATA[ */
+      var ElementorProFrontendConfig = {
+          "ajaxurl": "https:\/\/medicalmetrics.com\/wp-admin\/admin-ajax.php",
+          "nonce": "6003275e87",
+          "urls": {
+              "assets": "https:\/\/medicalmetrics.com\/wp-content\/plugins\/elementor-pro\/assets\/",
+              "rest": "https:\/\/medicalmetrics.com\/wp-json\/"
+          },
+          "shareButtonsNetworks": {
+              "facebook": {
+                  "title": "Facebook",
+                  "has_counter": true
+              },
+              "twitter": {
+                  "title": "Twitter"
+              },
+              "linkedin": {
+                  "title": "LinkedIn",
+                  "has_counter": true
+              },
+              "pinterest": {
+                  "title": "Pinterest",
+                  "has_counter": true
+              },
+              "reddit": {
+                  "title": "Reddit",
+                  "has_counter": true
+              },
+              "vk": {
+                  "title": "VK",
+                  "has_counter": true
+              },
+              "odnoklassniki": {
+                  "title": "OK",
+                  "has_counter": true
+              },
+              "tumblr": {
+                  "title": "Tumblr"
+              },
+              "digg": {
+                  "title": "Digg"
+              },
+              "skype": {
+                  "title": "Skype"
+              },
+              "stumbleupon": {
+                  "title": "StumbleUpon",
+                  "has_counter": true
+              },
+              "mix": {
+                  "title": "Mix"
+              },
+              "telegram": {
+                  "title": "Telegram"
+              },
+              "pocket": {
+                  "title": "Pocket",
+                  "has_counter": true
+              },
+              "xing": {
+                  "title": "XING",
+                  "has_counter": true
+              },
+              "whatsapp": {
+                  "title": "WhatsApp"
+              },
+              "email": {
+                  "title": "Email"
+              },
+              "print": {
+                  "title": "Print"
+              }
+          },
+          "facebook_sdk": {
+              "lang": "en_US",
+              "app_id": ""
+          },
+          "lottie": {
+              "defaultAnimationUrl": "https:\/\/medicalmetrics.com\/wp-content\/plugins\/elementor-pro\/modules\/lottie\/assets\/animations\/default.json"
+          }
+      };
+      /* ]]> */
+  </script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor-pro/assets/js/frontend.min.js?ver=1696887968" id="elementor-pro-frontend-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor-pro/assets/js/preloaded-elements-handlers.min.js?ver=1696887969" id="pro-preloaded-elements-handlers-js"
+      defer></script>
+  <script type="rocketlazyloadscript" data-minify="1" data-rocket-type="text/javascript" data-rocket-src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/js/preloaded-modules.min.js?ver=1696887969" id="preloaded-modules-js"
+      defer></script>
+  <script data-minify="1" type="text/javascript" src="https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor-pro/assets/lib/sticky/jquery.sticky.min.js?ver=1696887969" id="e-sticky-js" defer></script>
+  <script>
+      window.lazyLoadOptions = [{
+          elements_selector: "img[data-lazy-src],.rocket-lazyload,iframe[data-lazy-src]",
+          data_src: "lazy-src",
+          data_srcset: "lazy-srcset",
+          data_sizes: "lazy-sizes",
+          class_loading: "lazyloading",
+          class_loaded: "lazyloaded",
+          threshold: 300,
+          callback_loaded: function(element) {
+              if (element.tagName === "IFRAME" && element.dataset.rocketLazyload == "fitvidscompatible") {
+                  if (element.classList.contains("lazyloaded")) {
+                      if (typeof window.jQuery != "undefined") {
+                          if (jQuery.fn.fitVids) {
+                              jQuery(element).parent().fitVids()
+                          }
+                      }
+                  }
+              }
+          }
+      }, {
+          elements_selector: ".rocket-lazyload",
+          data_src: "lazy-src",
+          data_srcset: "lazy-srcset",
+          data_sizes: "lazy-sizes",
+          class_loading: "lazyloading",
+          class_loaded: "lazyloaded",
+          threshold: 300,
+      }];
+      window.addEventListener('LazyLoad::Initialized', function(e) {
+          var lazyLoadInstance = e.detail.instance;
+          if (window.MutationObserver) {
+              var observer = new MutationObserver(function(mutations) {
+                  var image_count = 0;
+                  var iframe_count = 0;
+                  var rocketlazy_count = 0;
+                  mutations.forEach(function(mutation) {
+                      for (var i = 0; i < mutation.addedNodes.length; i++) {
+                          if (typeof mutation.addedNodes[i].getElementsByTagName !== 'function') {
+                              continue
+                          }
+                          if (typeof mutation.addedNodes[i].getElementsByClassName !== 'function') {
+                              continue
+                          }
+                          images = mutation.addedNodes[i].getElementsByTagName('img');
+                          is_image = mutation.addedNodes[i].tagName == "IMG";
+                          iframes = mutation.addedNodes[i].getElementsByTagName('iframe');
+                          is_iframe = mutation.addedNodes[i].tagName == "IFRAME";
+                          rocket_lazy = mutation.addedNodes[i].getElementsByClassName('rocket-lazyload');
+                          image_count += images.length;
+                          iframe_count += iframes.length;
+                          rocketlazy_count += rocket_lazy.length;
+                          if (is_image) {
+                              image_count += 1
+                          }
+                          if (is_iframe) {
+                              iframe_count += 1
+                          }
+                      }
+                  });
+                  if (image_count > 0 || iframe_count > 0 || rocketlazy_count > 0) {
+                      lazyLoadInstance.update()
+                  }
+              });
+              var b = document.getElementsByTagName("body")[0];
+              var config = {
+                  childList: !0,
+                  subtree: !0
+              };
+              observer.observe(b, config)
+          }
+      }, !1)
+  </script>
+  <script data-no-minify="1" async src="https://op2cf1.p3cdn1.secureserver.net/wp-content/plugins/wp-rocket/assets/js/lazyload/17.5/lazyload.min.js"></script>
+  <script>
+      function lazyLoadThumb(e) {
+          var t = '<img data-lazy-src="https://i.ytimg.com/vi/ID/hqdefault.jpg" alt="" width="480" height="360"><noscript><img src="https://i.ytimg.com/vi/ID/hqdefault.jpg" alt="" width="480" height="360"></noscript>',
+              a = '<button class="play" aria-label="play Youtube video"></button>';
+          return t.replace("ID", e) + a
+      }
+
+      function lazyLoadYoutubeIframe() {
+          var e = document.createElement("iframe"),
+              t = "ID?autoplay=1";
+          t += 0 === this.parentNode.dataset.query.length ? '' : '&' + this.parentNode.dataset.query;
+          e.setAttribute("src", t.replace("ID", this.parentNode.dataset.src)), e.setAttribute("frameborder", "0"), e.setAttribute("allowfullscreen", "1"), e.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"), this.parentNode.parentNode.replaceChild(e, this.parentNode)
+      }
+      document.addEventListener("DOMContentLoaded", function() {
+          var e, t, p, a = document.getElementsByClassName("rll-youtube-player");
+          for (t = 0; t < a.length; t++) e = document.createElement("div"), e.setAttribute("data-id", a[t].dataset.id), e.setAttribute("data-query", a[t].dataset.query), e.setAttribute("data-src", a[t].dataset.src), e.innerHTML = lazyLoadThumb(a[t].dataset.id), a[t].appendChild(e), p = e.querySelector('.play'), p.onclick = lazyLoadYoutubeIframe
+      });
+  </script>
+  <script>
+      class RocketElementorAnimation {
+          constructor() {
+              this.deviceMode = document.createElement("span"), this.deviceMode.id = "elementor-device-mode", this.deviceMode.setAttribute("class", "elementor-screen-only"), document.body.appendChild(this.deviceMode)
+          }
+          _detectAnimations() {
+              let t = getComputedStyle(this.deviceMode, ":after").content.replace(/"/g, "");
+              this.animationSettingKeys = this._listAnimationSettingsKeys(t), document.querySelectorAll(".elementor-invisible[data-settings]").forEach(t => {
+                  const e = t.getBoundingClientRect();
+                  if (e.bottom >= 0 && e.top <= window.innerHeight) try {
+                      this._animateElement(t)
+                  } catch (t) {}
+              })
+          }
+          _animateElement(t) {
+              const e = JSON.parse(t.dataset.settings),
+                  i = e._animation_delay || e.animation_delay || 0,
+                  n = e[this.animationSettingKeys.find(t => e[t])];
+              if ("none" === n) return void t.classList.remove("elementor-invisible");
+              t.classList.remove(n), this.currentAnimation && t.classList.remove(this.currentAnimation), this.currentAnimation = n;
+              let s = setTimeout(() => {
+                  t.classList.remove("elementor-invisible"), t.classList.add("animated", n), this._removeAnimationSettings(t, e)
+              }, i);
+              window.addEventListener("rocket-startLoading", function() {
+                  clearTimeout(s)
+              })
+          }
+          _listAnimationSettingsKeys(t = "mobile") {
+              const e = [""];
+              switch (t) {
+                  case "mobile":
+                      e.unshift("_mobile");
+                  case "tablet":
+                      e.unshift("_tablet");
+                  case "desktop":
+                      e.unshift("_desktop")
+              }
+              const i = [];
+              return ["animation", "_animation"].forEach(t => {
+                  e.forEach(e => {
+                      i.push(t + e)
+                  })
+              }), i
+          }
+          _removeAnimationSettings(t, e) {
+              this._listAnimationSettingsKeys().forEach(t => delete e[t]), t.dataset.settings = JSON.stringify(e)
+          }
+          static run() {
+              const t = new RocketElementorAnimation;
+              requestAnimationFrame(t._detectAnimations.bind(t))
+          }
+      }
+      document.addEventListener("DOMContentLoaded", RocketElementorAnimation.run);
+  </script>
+  <!---------styles----------->
+  <style id='wp-emoji-styles-inline-css' type='text/css'>
+    img.wp-smiley,
+    img.emoji {
+      display: inline !important;
+      border: none !important;
+      box-shadow: none !important;
+      height: 1em !important;
+      width: 1em !important;
+      margin: 0 0.07em !important;
+      vertical-align: -0.1em !important;
+      background: none !important;
+      padding: 0 !important;
+    }
+  </style>
+  <link data-minify="1" rel='stylesheet' id='wp-block-library-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-includes/css/dist/block-library/style.min.css?ver=1696887964'
+    type='text/css' media='all' />
+  <style id='classic-theme-styles-inline-css' type='text/css'>
+    /*! This file is auto-generated */
+
+    .wp-block-button__link {
+      color: #fff;
+      background-color: #32373c;
+      border-radius: 9999px;
+      box-shadow: none;
+      text-decoration: none;
+      padding: calc(.667em + 2px) calc(1.333em + 2px);
+      font-size: 1.125em
+    }
+
+    .wp-block-file__button {
+      background: #32373c;
+      color: #fff;
+      text-decoration: none
+    }
+  </style>
+  <link data-minify="1" rel='stylesheet' id='contact-form-7-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/contact-form-7/includes/css/styles.css?ver=1696887964'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='medical-metrics-general-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/assets/css/general.css?ver=1696887964'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='medical-metrics-blog-list-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/assets/css/blog/blog-list.css?ver=1696887964'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='medical-metrics-main-style-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/assets/css/style.css?ver=1696887964'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='elementor-icons-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/lib/eicons/css/elementor-icons.min.css?ver=1696887964'
+    type='text/css' media='all' />
+  <link rel='stylesheet' id='elementor-frontend-css'
+    href='https://op2cf1.p3cdn1.secureserver.net/wp-content/uploads/elementor/css/custom-frontend-lite.min.css?ver=1692547384&#038;time=1725133019'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='swiper-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/lib/swiper/css/swiper.min.css?ver=1696887964'
+    type='text/css' media='all' />
+  <link rel='stylesheet' id='elementor-post-5-css'
+    href='https://op2cf1.p3cdn1.secureserver.net/wp-content/uploads/elementor/css/post-5.css?ver=1692547389&#038;time=1725133019'
+    type='text/css' media='all' />
+  <link rel='stylesheet' id='elementor-pro-css'
+    href='https://op2cf1.p3cdn1.secureserver.net/wp-content/uploads/elementor/css/custom-pro-frontend-lite.min.css?ver=1692547389&#038;time=1725133019'
+    type='text/css' media='all' />
+  <link rel='stylesheet' id='elementor-global-css'
+    href='https://op2cf1.p3cdn1.secureserver.net/wp-content/uploads/elementor/css/global.css?ver=1692547389&#038;time=1725133019'
+    type='text/css' media='all' />
+  <link rel='stylesheet' id='elementor-post-7-css'
+    href='https://op2cf1.p3cdn1.secureserver.net/wp-content/uploads/elementor/css/post-7.css?ver=1724864106&#038;time=1725133019'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='medical-metrics-minibar-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/assets/css/lib/minibar.css?ver=1696887964'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='addtoany-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/add-to-any/addtoany.min.css?ver=1696887965'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='medical-metrics-btn-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/widgets/medical-metrics-btn/assets/css/medical-metrics-btn.css?ver=1696887965'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='honeycombs-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/widgets/honeycombs/assets/css/honeycombs.css?ver=1696887965'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='simple-slider-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/widgets/simple-slider/assets/css/simple-slider.css?ver=1696887965'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='posts-list-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/themes/medical-metrics/widgets/posts-list/assets/css/posts-list.css?ver=1696887965'
+    type='text/css' media='all' />
+  <link data-minify="1" rel='stylesheet' id='e-animations-css'
+    href='https://medicalmetrics.com/wp-content/cache/min/1/wp-content/plugins/elementor/assets/lib/animations/animations.min.css?ver=1696887965'
+    type='text/css' media='all' />
+  <title>React App</title>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+</body>
+
 </html>
